@@ -21,6 +21,9 @@ namespace SoccerLocker.Data
             Database.SetInitializer(new SoccerLockerInitializer());
         }
 
+        public DbSet<Cleats> Cleats { get; set;}
+
+
         public System.Data.Entity.DbSet<SoccerLocker.Models.Cleats> Cleats { get; set; }
     }
 }
