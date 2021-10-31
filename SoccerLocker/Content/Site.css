@@ -22,3 +22,26 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.carousel-indicators li{
+    background-color: #fff;
+    background-color: rgba(70,70,70,0.25);
+}
+
+.carousel-indicators .active{
+    background-color: #444;
+}
+
+.custom-navbar {
+    background-color: #5cb85c;
+    color: white;
+    border-radius: 0;
+}
+
+.custom-navbar li a, .navbar-brand{
+    color: white;
+}
+
+.custom-navbar a:hover{
+    color: #000000;
+}

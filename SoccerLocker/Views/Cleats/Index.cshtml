@@ -1,57 +1,88 @@
-﻿@model IEnumerable<SoccerLocker.Models.Cleats>
+﻿@model SoccerLocker.ViewModels.CleatsIndexViewModel
+@using PagedList.Mvc
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Cleats";
 }
 
-<h2>Index</h2>
-
+<h2>Shop Cleats</h2>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @(String.IsNullOrWhiteSpace(Model.Search) ? "Showing all" : "You search for " + Model.Search + " found") @Model.Cleats.TotalItemCount cleats
+</p>
+<p>
+    @if (Request.IsAuthenticated)
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
+    @using (Html.BeginForm("Index", "Cleats", FormMethod.Get))
+    {
+        <label>Filter by Brand:</label>
+        @Html.DropDownListFor(vm => vm.Brand, Model.BrandFilterItems, "All");
+        <label>Sort by:</label>
+        @Html.DropDownListFor(vm => vm.SortBy, new SelectList(Model.Sorts, "Value", "Key"), "Default");
+        <input type="submit" value="Filter" class="btn btn-success" />
+        <input type="hidden" name="Search" id="Search" value="@Model.Search" />
+    }
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.cleatBrand)
+            @Html.DisplayNameFor(model => model.Brand)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.cleatName)
+            @Html.DisplayNameFor(model => model.Cleats.First().cleatName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.size)
+            @Html.DisplayNameFor(model => model.Cleats.First().size)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.price)
+            @Html.DisplayNameFor(model => model.Cleats.First().price)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.color)
+            @Html.DisplayNameFor(model => model.Cleats.First().color)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.cleatBrand)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.cleatName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.size)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.color)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.Cleats)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cleatName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.size)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.color)
+            </td>
+            <td>
+                @if (Request.IsAuthenticated)
+                {
+                    @Html.ActionLink("Edit | ", "Edit", new { id = item.Id })
+                    @Html.ActionLink("Delete | ", "Delete", new { id = item.Id })
+                }
+                @Html.ActionLink("Details", "Details", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>
+<div>
+ Page @(Model.Cleats.PageCount < Model.Cleats.PageNumber ? 0 :
+ Model.Cleats.PageNumber) of @Model.Cleats.PageCount
+@Html.PagedListPager(Model.Cleats, page => Url.Action("Index",
+new
+{
+    brand = @Model.Brand,
+    Search = @Model.Search,
+    sortBy = @Model.SortBy,
+    page
+}))
+</div>

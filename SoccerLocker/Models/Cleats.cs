@@ -10,10 +10,9 @@ namespace SoccerLocker.Models
     {
         [Required]
         public int Id { get; set; }
-        [Required]
-        [Display(Name="Brand")]
-        [StringLength(50)]
-        public string cleatBrand { get; set; }
+        [Display(Name ="Brand")]
+        public int? BrandID { get; set; }
+        public virtual Brand Brand { get; set; }
         [Required]
         [Display(Name = "Name")]
         [StringLength(50)]
